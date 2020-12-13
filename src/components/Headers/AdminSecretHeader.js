@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import ImageContainer from "../Containers/ImageContainer";
+import ImageContainerSecret from "../Containers/ImageContainerSecret";
 import Logo from "../Logo";
 import Input from "../Input";
+import { useEffect, useState } from "react";
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -17,10 +18,14 @@ const DivForm = styled.div`
 `;
 
 export default function AdminSecretHeader() {
-  const link = "https://link.com/sala";
+  const [link, setLink] = useState("");
+
+  useEffect(() => {
+    setLink(`${window.location.origin}${window.location.pathname}`);
+  }, []);
 
   return (
-    <ImageContainer>
+    <ImageContainerSecret>
       <Container>
         <Logo />
       </Container>
@@ -28,6 +33,6 @@ export default function AdminSecretHeader() {
         <p>Compartilhe essa sala com seus amigos!</p>
         <Input value={link} disabled />
       </DivForm>
-    </ImageContainer>
+    </ImageContainerSecret>
   );
 }

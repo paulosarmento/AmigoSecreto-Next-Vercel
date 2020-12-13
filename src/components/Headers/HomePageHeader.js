@@ -1,5 +1,6 @@
+import { useRouter } from "next/router";
 import styled from "styled-components";
-import ImageContainer from "../Containers/imageContainer";
+import ImageContainerSecret from "../Containers/ImageContainerSecret";
 import Logo from "../Logo";
 import NameEmailForm from "../NameEmailForm";
 
@@ -21,15 +22,35 @@ const FormDiv = styled.div`
 `;
 
 export default function HomePageHeader() {
+  const router = useRouter();
+
+  const handleSubmit = async ({ name, email }) => {
+    const { NEXT_PUBLIC_API_URL } = process.env;
+    const data = await fetch(`${NEXT_PUBLIC_API_URL}/secret`, {
+      method: "POST",
+      body: JSON.stringify({
+        name,
+        email,
+      }),
+    });
+    handleResponse(await data.json());
+  };
+
+  const handleResponse = ({ success, id, adminKey }) => {
+    if (success) {
+      router.push(`/secret/${id}?adminKey=${adminKey}`);
+    }
+  };
+
   return (
-    <ImageContainer>
+    <ImageContainerSecret>
       <Container>
         <Logo />
         <h2>A melhor brincadeira do natal</h2>
       </Container>
       <FormDiv>
-        <NameEmailForm />
+        <NameEmailForm onSubmit={handleSubmit} />
       </FormDiv>
-    </ImageContainer>
+    </ImageContainerSecret>
   );
 }
